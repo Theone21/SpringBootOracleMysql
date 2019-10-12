@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.RevisitInfoMapper">
+  <sql id="Base_Column_List">
+    REVISIT_ID, REVISIT_CODE, REVISIT_NAME, INSERT_USER, INSERT_DATE, SUBJECT_ID, SITE_ID, 
+    REVISIT_REMARK, LOCK_FLAG, CREATE_DATE, IS_IMPORT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="common.BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ermis_epi_revisit_info
+    where REVISIT_ID = #{revisitId,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.example.demo.model.RevisitInfo">
+    insert into ermis_epi_revisit_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="revisitId != null">
+        REVISIT_ID,
+      </if>
+      <if test="revisitCode != null">
+        REVISIT_CODE,
+      </if>
+      <if test="revisitName != null">
+        REVISIT_NAME,
+      </if>
+      <if test="insertUser != null">
+        INSERT_USER,
+      </if>
+      <if test="insertDate != null">
+        INSERT_DATE,
+      </if>
+      <if test="subjectId != null">
+        SUBJECT_ID,
+      </if>
+      <if test="siteId != null">
+        SITE_ID,
+      </if>
+      <if test="revisitRemark != null">
+        REVISIT_REMARK,
+      </if>
+      <if test="lockFlag != null">
+        LOCK_FLAG,
+      </if>
+      <if test="createDate != null">
+        CREATE_DATE,
+      </if>
+      <if test="isImport != null">
+        IS_IMPORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="revisitId != null">
+        #{revisitId,jdbcType=INTEGER},
+      </if>
+      <if test="revisitCode != null">
+        #{revisitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="revisitName != null">
+        #{revisitName,jdbcType=VARCHAR},
+      </if>
+      <if test="insertUser != null">
+        #{insertUser,jdbcType=INTEGER},
+      </if>
+      <if test="insertDate != null">
+        #{insertDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subjectId != null">
+        #{subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="siteId != null">
+        #{siteId,jdbcType=INTEGER},
+      </if>
+      <if test="revisitRemark != null">
+        #{revisitRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="lockFlag != null">
+        #{lockFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="isImport != null">
+        #{isImport,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getPatientIdByCode" resultType="Integer">
+    SELECT
+           PATIENT_ID
+    FROM
+         ermis_patient_code
+    WHERE
+            PATIENT_CODE = #{patientCode}
+  </select>
+
+  <select id="getReVisitIdByCode" resultType="Integer">
+    SELECT
+           REVISIT_ID
+    FROM
+         ermis_epi_revisit_info
+    WHERE
+            REVISIT_CODE = #{revisitCode}
+  </select>
+
+  <insert id="insertRevisitPatient" parameterType="com.example.demo.model.RevisitPatient">
+      INSERT INTO `ermis_epi_revisit_patient`
+              (`REVISIT_ID`, `PATIENT_ID`, `TOWN`, `VILLAGEID`, `IS_IMPORT`)
+      VALUES (#{revisitId}, #{patientId}, #{town}, #{villageId}, #{isImport});
+  </insert>
+
+  <select id="getUserIdByName" resultType="Integer" parameterType="String">
+    SELECT USER_ID FROM edc_systemuser WHERE OLD_USER_NAME = #{userName}
+  </select>
+
+  <select id="getVillageIdByName" resultType="Integer">
+    SELECT VILLAGEID FROM ermis_village WHERE VILLAGENAME = #{villageName} AND TOWN = #{town}
+  </select>
+
+  <insert id="insertRevisitEntryArea" parameterType="com.example.demo.model.RevisitEntry">
+    INSERT INTO `ermis_epi_revisit_entry_area` (
+            `USER_ID`,
+            `REVISIT_ID`,
+            `TOWN`,
+            `VILLAGEID`,
+            `STATE`,
+            `MANAGER`,
+            `SUBMITSTATE`,
+            `IS_IMPORT`
+            )
+    VALUES
+           (
+                   #{userId},
+                   #{revisitId},
+                   #{town},
+                   #{villageId},
+                   #{state},
+                   #{manager},
+                   #{submitState},
+                   #{isImport}
+                   )
+  </insert>
+
+    <insert id="insertRevisitResultTemp" parameterType="com.example.demo.model.RevisitResultTemp">
+        INSERT INTO `ermis_epi_revisit_result_temp` (
+                `REVISIT_ID`,
+                `PATIENT_ID`,
+                `USER_ID`,
+                `VILLAGE_ID`,
+                `REVISIT_DATE`,
+                `IS_USE`,
+                `TELEPHONE`,
+                `SUBMITSTATE`,
+                `IS_SIGN`,
+                `REVISIT_RESULT`,
+                `GAST`,
+                `IS_IMPORT`
+                )
+        VALUES
+               (
+                       #{revisitId},
+                       #{patientId},
+                       #{userId},
+                       #{villageId},
+                       #{revisitDate},
+                       #{isUse},
+                       #{telephone},
+                       #{submitState},
+                       #{isSign},
+                       #{resultStr},
+                       #{gast},
+                       1
+                       )
+    </insert>
+
+    <select id="getVillageIdByPatientCode" parameterType="String" resultType="Integer">
+        SELECT a.VILLAGEID from ermis_patient_master a
+                                    JOIN ermis_patient_code b ON a.PATIENT_ID = b.PATIENT_ID
+        WHERE b.SITE_ID = 1 AND b.SUBJECT_ID = 1 AND b.PATIENT_CODE = #{patientCode}
+    </select>
+
+    <insert id="insertResult" parameterType="com.example.demo.model.RevisitResultTemp">
+        INSERT INTO `ermis_epi_revisit_result` (`REVISIT_ID`, `PATIENT_ID`, `REVISIT_DATE`, `TELEPHONE`, `REMARK`,
+          `REVISIT_RESULT`, `GAST`, `VILLAGEID`, `IS_IMPORT`)
+        VALUES (#{revisitId}, #{patientId}, #{revisitDate}, #{telephone},
+                #{remark}, #{resultStr}, #{gast}, #{villageId}, 1);
+    </insert>
+
+    <insert id="insertCrfContent" parameterType="com.example.demo.model.RevisitCrfContentTemp">
+        INSERT INTO `ermis_epi_crf_content_temp` (`TEMPLATE_ID`, `PATIENT_ID`, `VILLAGEID`, `REVISIT_ID`,
+                                                   `ELEM_TEXT`, `ELEM_TYPE`, `ELEM_VALUE`, `ELEM_CN_VALUE`,
+                                                  `DATA_SOURCE`)
+        VALUES
+               (#{templateId}, #{patientId}, #{villageId}, #{revisitId}, #{elemText}, #{elemType},
+                #{elemValue}, #{elemCnValue}, #{dataSource});
+    </insert>
+
+    <insert id="insertCrfContentTemp" parameterType="com.example.demo.model.RevisitCrfContentTemp">
+        INSERT INTO `ermis_epi_crf_content_temp` (`TEMPLATE_ID`, `PATIENT_ID`, `VILLAGEID`, `REVISIT_ID`,
+          `USER_ID`, `ELEM_TEXT`, `ELEM_TYPE`, `ELEM_VALUE`, `ELEM_CN_VALUE`,
+          `DATA_SOURCE`)
+        VALUES
+               (#{templateId}, #{patientId}, #{villageId}, #{revisitId}, #{userId}, #{elemText}, #{elemType},
+                #{elemValue}, #{elemCnValue}, #{dataSource});
+    </insert>
+
+    <select id="getElementTypeByText" parameterType="String" resultType="String">
+        SELECT INPUT_TYPE FROM tpl_elements WHERE ID = #{elementText}
+    </select>
+
+    <select id="getElemValueByCnValue" resultType="String">
+        SELECT ID FROM tpl_options WHERE alias = #{elemValue} AND template_id = '2134' AND EALIAS_ID = #{elementText}
+        ORDER BY TIMEU DESC LIMIT 1
+    </select>
+</mapper>

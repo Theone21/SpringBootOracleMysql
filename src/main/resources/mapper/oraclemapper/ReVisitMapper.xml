@@ -1,0 +1,98 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.oraclemapper.ReVisitMapper">
+    <select id="getVisitLength" resultType="java.lang.Long">
+        select count(1) from EPI_REVISIT_INFO
+    </select>
+
+    <select id="getRevisitInfo" resultMap="common.BaseResultMap">
+        SELECT
+               REVISIT_ID AS REVISIT_CODE,
+               REVISIT_NAME AS REVISIT_NAME,
+               1 AS INSERT_USER,
+               '平台管理员' AS INSERT_NAME,
+               1 AS SUBJECT_ID,
+               1 AS SITE_ID,
+               EPI.REVISIT_REMARK AS REVISIT_REMARK,
+               EPI.LOCK_FLAG AS LOCK_FLAG,
+               TO_CHAR (EPI.IN_DATE, 'YYYY-MM-DD') AS CREATE_DATE
+        FROM
+             EPI_REVISIT_INFO epi
+    </select>
+
+    <select id="getRevisitPatient" resultMap="common.revisitPatient">
+        SELECT
+               REVISIT_ID AS REVISIT_CODE,
+               TOWN,
+               VILLAGE_ID AS VILLAGE_ID,
+               PATIENT_ID AS PATIENT_CODE
+        FROM
+             EPI_REVISIT_PATIENT
+    </select>
+
+    <select id="getRevisitEntry" resultMap="common.revisitEntry">
+        SELECT
+               a1.REVISIT_ID AS REVISIT_CODE,
+               B1.USER_NAME,
+               A1.TOWN,
+               A1.VILLAGE_NAME,
+               A1.MANAGER,
+               A1.IN_DATE,
+               A1.STATE,
+               A1.SUBMITSTATE
+        FROM
+             EPI_REVISIT_ENTRY_AREA a1
+                 LEFT JOIN SYSTEM_USER b1 ON A1.USER_ID = B1.USER_ID
+    </select>
+
+    <select id="getResultTemp" resultMap="common.revisitResultTemp">
+        SELECT
+            a1.REVISIT_ID AS REVISIT_CODE,
+            a1.PATIENT_ID AS PATIENT_CODE,
+            B1.USER_NAME,
+            A1.RESULT,
+            A1.GAST,
+            A1.IS_SIGN,
+            A1.REVISIT_DATE,
+            A1.GAST_DATE,
+            A1.LOST_REVISIT_REASON,
+            A1.IS_USE,
+            A1.TELEPHONE,
+            A1.SUBMITSTATE,
+            A1.USER_ID
+        FROM
+            EPI_REVISIT_RESULT_TEMP a1
+            LEFT JOIN SYSTEM_USER b1 ON A1.USER_ID = B1.USER_ID
+
+    </select>
+
+    <select id="getResult" resultMap="common.revisitResultTemp">
+        SELECT
+               a1.REVISIT_ID AS REVISIT_CODE,
+               a1.PATIENT_ID AS PATIENT_CODE,
+               A1.RESULT,
+               A1.GAST,
+               A1.IS_SIGN,
+               A1.REVISIT_DATE,
+               A1.GAST_DATE,
+               A1.LOST_REVISIT_REASON,
+               A1.TELEPHONE,
+               A1.REMARK
+        FROM
+             EPI_REVISIT_RESULT a1
+    </select>
+
+
+    <select id="getRegisterCard" resultMap="common.registerCard">
+        SELECT ELEMENT_ID, ELEMENT_NAME, CARD_VALUE, REGISTER_DATE, "TYPE", "SIGN", PATIENT_NAME
+        FROM REGISTER_CARD
+        WHERE PATIENT_ID = #{patientCode} AND REVISIT_ID = #{revisitCode} AND IN_USER = #{inUser} AND CARD_ID = #{cardId}
+    </select>
+
+    <select id="getRegisterCardFinal" resultMap="common.registerCard">
+        SELECT ELEMENT_ID, ELEMENT_NAME, CARD_VALUE, REGISTER_DATE, "TYPE", "SIGN", PATIENT_NAME
+        FROM REGISTER_CARD
+        WHERE PATIENT_ID = #{patientCode} AND REVISIT_ID = #{revisitCode} AND CARD_ID = #{cardId}
+    </select>
+</mapper>

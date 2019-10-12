@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.RevisitInfo">
+    <id column="REVISIT_ID" jdbcType="INTEGER" property="revisitId" />
+    <result column="REVISIT_CODE" jdbcType="VARCHAR" property="revisitCode" />
+    <result column="REVISIT_NAME" jdbcType="VARCHAR" property="revisitName" />
+    <result column="INSERT_USER" jdbcType="INTEGER" property="insertUser" />
+    <result column="INSERT_DATE" jdbcType="TIMESTAMP" property="insertDate" />
+    <result column="SUBJECT_ID" jdbcType="INTEGER" property="subjectId" />
+    <result column="SITE_ID" jdbcType="INTEGER" property="siteId" />
+    <result column="REVISIT_REMARK" jdbcType="VARCHAR" property="revisitRemark" />
+    <result column="LOCK_FLAG" jdbcType="TINYINT" property="lockFlag" />
+    <result column="CREATE_DATE" jdbcType="DATE" property="createDate" />
+    <result column="IS_IMPORT" jdbcType="TINYINT" property="isImport" />
+  </resultMap>
+
+  <resultMap id="revisitPatient" type="com.example.demo.model.RevisitPatient">
+    <result column="REVISIT_CODE" jdbcType="VARCHAR" property="revisitCode"></result>
+    <result column="TOWN" jdbcType="VARCHAR" property="town"></result>
+    <result column="VILLAGE_ID" jdbcType="INTEGER" property="villageId"></result>
+    <result column="PATIENT_CODE" jdbcType="VARCHAR" property="patientCode"></result>
+  </resultMap>
+
+  <resultMap id="revisitEntry" type="com.example.demo.model.RevisitEntry">
+    <result column="REVISIT_CODE" jdbcType="VARCHAR" property="revisitCode"></result>
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"></result>
+    <result column="TOWN" jdbcType="VARCHAR" property="town"></result>
+    <result column="VILLAGE_NAME" jdbcType="VARCHAR" property="villageName"></result>
+    <result column="MANAGER" jdbcType="VARCHAR" property="manager"></result>
+    <result column="IN_DATE" jdbcType="DATE" property="insertDate"></result>
+    <result column="STATE" jdbcType="TINYINT" property="state"></result>
+    <result column="SUBMITSTATE" jdbcType="TINYINT" property="submitState"></result>
+  </resultMap>
+
+  <resultMap id="revisitResultTemp" type="com.example.demo.model.RevisitResultTemp">
+    <result column="REVISIT_CODE" jdbcType="VARCHAR" property="revisitCode"></result>
+    <result column="PATIENT_CODE" jdbcType="VARCHAR" property="patientCode"></result>
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"></result>
+    <result column="RESULT" jdbcType="TINYINT" property="result"></result>
+    <result column="GAST" jdbcType="TINYINT" property="gast"></result>
+    <result column="IS_SIGN" jdbcType="TINYINT" property="isSign"></result>
+    <result column="REVISIT_DATE" jdbcType="DATE" property="revisitDate"></result>
+    <result column="GAST_DATE" jdbcType="DATE" property="gastDate"></result>
+    <result column="IS_USE" jdbcType="TINYINT" property="isUse"></result>
+    <result column="TELEPHONE" jdbcType="VARCHAR" property="telephone"></result>
+    <result column="SUBMITSTATE" jdbcType="TINYINT" property="submitState"></result>
+    <result column="USER_ID" jdbcType="VARCHAR" property="oracleUserId"></result>
+    <result column="LOST_REVISIT_REASON" jdbcType="VARCHAR" property="lostRevisitReason"></result>
+  </resultMap>
+
+  <resultMap id="registerCard" type="com.example.demo.model.RegisterCard">
+    <result column="ELEMENT_ID" jdbcType="VARCHAR" property="elementId"></result>
+    <result column="ELEMENT_NAME" jdbcType="VARCHAR" property="elementName"></result>
+    <result column="CARD_VALUE" jdbcType="VARCHAR" property="cardValue"></result>
+    <result column="REGISTER_DATE" jdbcType="DATE" property="registerDate"></result>
+    <result column="TYPE" jdbcType="VARCHAR" property="type"></result>
+    <result column="SIGN" jdbcType="VARCHAR" property="sign"></result>
+    <result column="PATIENT_NAME" jdbcType="VARCHAR" property="patientName"></result>
+  </resultMap>
+  
+  <!--<resultMap id="" type=""-->
+</mapper>

@@ -237,7 +237,7 @@ public class TestServiceImpl implements TestService {
 
             rcct.setElemText("128803_2134_1");
             rcct.setElemType("text");
-            String value  = rrt.getLostRevisitReason().split(":")[1];
+            String value  = rrt.getLostRevisitReason();
             rcct.setElemValue(value);
             rcct.setElemCnValue(value);
             rcct.setDataSource("import");
@@ -301,7 +301,7 @@ public class TestServiceImpl implements TestService {
             if(cnValue.startsWith("其他") && elementText.equals("128797_2134_1") && cnValue.contains(":")){
                 rcct.setElemText("128798_2134_1");
                 rcct.setElemType("text");
-                String newCnValue = cnValue.split(":")[1];
+                String newCnValue = cnValue;
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);
@@ -309,7 +309,7 @@ public class TestServiceImpl implements TestService {
             if(cnValue.startsWith("其他") && elementText.equals("129087_2134_1") && cnValue.contains(":")){
                 rcct.setElemText("129091_2134_1");
                 rcct.setElemType("text");
-                String newCnValue = cnValue.split(":")[1];
+                String newCnValue = cnValue;
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);
@@ -400,7 +400,7 @@ public class TestServiceImpl implements TestService {
             if(cnValue.startsWith("其他（请注明）:") && elementText.equals("129597_2134_1")){
                 rcct.setElemText("129598_2134_1");
                 rcct.setElemType("text");
-                String newCnValue = cnValue.split(":")[1];
+                String newCnValue = cnValue;
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);
@@ -409,7 +409,7 @@ public class TestServiceImpl implements TestService {
             if(cnValue.startsWith("其他（请注明）:") && elementText.equals("129599_2134_1")){
                 rcct.setElemText("129600_2134_1");
                 rcct.setElemType("text");
-                String newCnValue = cnValue.split(":")[1];
+                String newCnValue = cnValue;
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);

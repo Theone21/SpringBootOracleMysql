@@ -15,21 +15,33 @@ public class DemoApplicationTests {
     @Autowired
     private TestService ts;
 
+    /**
+     * 测试oracle库的连接
+     */
     @Test
     public void test1(){
         TestCase.assertEquals(106, ts.getReVisitLen().intValue());
     }
 
+    /**
+     * 转换随访任务
+     */
     @Test
     public void test2(){
         TestCase.assertEquals(1, ts.convertRevisitInfoData().intValue());
     }
 
+    /**
+     * 转换随访任务下的患者
+     */
     @Test
     public void test3(){
         TestCase.assertEquals(1, ts.convertRevisitPatient().intValue());
     }
 
+    /**
+     * 转换任务分配情况
+     */
     @Test
     public void test4(){
         TestCase.assertEquals(1, ts.convertRevisitEntry().intValue());

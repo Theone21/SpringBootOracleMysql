@@ -112,7 +112,6 @@ public class TestServiceImpl implements TestService {
      * 转换随访结果临时表
      */
     @Override
-    @Transactional
     public Integer convertRevisitResultTemp(){
         Map<Integer, String> resultMapToCnValue = new HashMap<>();
         resultMapToCnValue.put(1, "随访到且无肿瘤");
@@ -128,8 +127,23 @@ public class TestServiceImpl implements TestService {
         resultMapToValue.put(4, "296323");
         resultMapToValue.put(5, "296324");
 
+        Map<Integer, String> gastMap = new HashMap<>();
+        gastMap.put(1, "否");
+        gastMap.put(2, "是");
+        gastMap.put(3, "不详");
+
+
+        Map<Integer, String> gastToValue = new HashMap<>();
+        gastToValue.put(1, "296399");
+        gastToValue.put(2, "296400");
+        gastToValue.put(3, "296401");
+
+
+
         List<RevisitResultTemp> rrts = oracleRvm.getResultTemp();
+        System.out.println("总长度" + rrts.size());
         for(int i = 0; i < rrts.size(); i++){
+            System.out.println("目前进行到第" + i + "个");
             RevisitResultTemp rrt = rrts.get(i);
             Integer patientId = mysqlRim.getPatientIdByCode(rrt.getPatientCode());
             Integer villageId = mysqlRim.getVillageIdByPatientCode(rrt.getPatientCode());
@@ -156,6 +170,28 @@ public class TestServiceImpl implements TestService {
             rcct.setElemCnValue(resultMapToCnValue.get(revisitResult));
             rcct.setDataSource("import");
             mysqlRim.insertCrfContentTemp(rcct);
+
+
+
+            Integer gast = rrt.getGast();
+            rcct.setElemText("128779_2134_1");
+            rcct.setElemType("radio");
+            rcct.setElemValue(gastToValue.get(gast));
+            rcct.setElemCnValue(gastMap.get(gast));
+            mysqlRim.insertCrfContentTemp(rcct);
+            if(gast == 2){
+                rcct.setElemText("128780_2134_1");
+                rcct.setElemType("text");
+                Date d = rrt.getGastDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                rcct.setElemValue(sdf.format(d));
+                rcct.setElemCnValue(sdf.format(d));
+                mysqlRim.insertCrfContentTemp(rcct);
+            }
+
+
+
+
             if(revisitResult == 2){
                 List<RegisterCard> rcs = oracleRvm.getRegisterCard(rrt.getPatientCode(), rrt.getRevisitCode(),
                         rrt.getOracleUserId(), "R02");
@@ -176,7 +212,7 @@ public class TestServiceImpl implements TestService {
                     }
                 });
             }
-            if(revisitId == 4){
+            if(revisitResult == 4){
                 handleLost(rrt, rcct, new InsertData() {
                     @Override
                     public void insertData(RevisitCrfContentTemp rcct) {
@@ -184,7 +220,7 @@ public class TestServiceImpl implements TestService {
                     }
                 });
             }
-            if(revisitId == 5){
+            if(revisitResult == 5){
                 List<RegisterCard> rcs = oracleRvm.getRegisterCard(rrt.getPatientCode(), rrt.getRevisitCode(), rrt.getOracleUserId(), "R02");
                 handleDiseaseCard(rrt, rcct, true, rcs, new InsertData() {
                     @Override
@@ -396,7 +432,6 @@ public class TestServiceImpl implements TestService {
             rcct.setElemCnValue(tempCnValue);
             rcct.setDataSource("import");
             insertData.insertData(rcct);
-//            mysqlRim.insertCrfContentTemp(rcct);
             if(cnValue.startsWith("其他（请注明）:") && elementText.equals("129597_2134_1")){
                 rcct.setElemText("129598_2134_1");
                 rcct.setElemType("text");
@@ -404,7 +439,6 @@ public class TestServiceImpl implements TestService {
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);
-//                mysqlRim.insertCrfContentTemp(rcct);
             }
             if(cnValue.startsWith("其他（请注明）:") && elementText.equals("129599_2134_1")){
                 rcct.setElemText("129600_2134_1");
@@ -413,7 +447,6 @@ public class TestServiceImpl implements TestService {
                 rcct.setElemValue(newCnValue);
                 rcct.setElemCnValue(newCnValue);
                 insertData.insertData(rcct);
-//                mysqlRim.insertCrfContentTemp(rcct);
             }
         }
         if(rcs.size() > 0){
@@ -425,7 +458,6 @@ public class TestServiceImpl implements TestService {
             rcct.setElemCnValue(rc.getPatientName());
             rcct.setDataSource("import");
             insertData.insertData(rcct);
-//            mysqlRim.insertCrfContentTemp(rcct);
 
             if(saveSign){
                 // 工作人员签字
@@ -435,7 +467,6 @@ public class TestServiceImpl implements TestService {
                 rcct.setElemCnValue(rc.getSign());
                 rcct.setDataSource("import");
                 insertData.insertData(rcct);
-//                mysqlRim.insertCrfContentTemp(rcct);
             }
 
             if (saveSign){
@@ -448,7 +479,6 @@ public class TestServiceImpl implements TestService {
                 rcct.setElemCnValue(sdf.format(date));
                 rcct.setDataSource("import");
                 insertData.insertData(rcct);
-//                mysqlRim.insertCrfContentTemp(rcct);
             }
 
 
@@ -462,7 +492,6 @@ public class TestServiceImpl implements TestService {
      * @return
      */
     @Override
-    @Transactional
     public Integer convertRevisitResult() {
         Map<Integer, String> resultMap = new HashMap<>();
         resultMap.put(1, "随访到且无肿瘤");
@@ -478,9 +507,24 @@ public class TestServiceImpl implements TestService {
         resultMapToValue.put(4, "296323");
         resultMapToValue.put(5, "296324");
 
+        Map<Integer, String> gastMap = new HashMap<>();
+        gastMap.put(1, "否");
+        gastMap.put(2, "是");
+        gastMap.put(3, "不详");
+
+
+        Map<Integer, String> gastToValue = new HashMap<>();
+        gastToValue.put(1, "296399");
+        gastToValue.put(2, "296400");
+        gastToValue.put(3, "296401");
 
         List<RevisitResultTemp> rrts = oracleRvm.getResult();
+        System.out.println("总长度为" + rrts.size());
         for(int i = 0; i < rrts.size(); i++){
+            if(i == 22){
+                System.out.println("打断点");
+            }
+            System.out.println("现在进行到第" + i + "个");
             RevisitResultTemp rrt = rrts.get(i);
             rrt.setRevisitId(mysqlRim.getReVisitIdByCode(rrt.getRevisitCode()));
             rrt.setPatientId(mysqlRim.getPatientIdByCode(rrt.getPatientCode()));
@@ -506,6 +550,24 @@ public class TestServiceImpl implements TestService {
             rcct.setElemCnValue(resultMap.get(revisitResult));
             rcct.setDataSource("import");
             mysqlRim.insertCrfContent(rcct);
+
+
+            Integer gast = rrt.getGast();
+            rcct.setElemText("128779_2134_1");
+            rcct.setElemType("radio");
+            rcct.setElemValue(gastToValue.get(gast));
+            rcct.setElemCnValue(gastMap.get(gast));
+            mysqlRim.insertCrfContent(rcct);
+            if(gast == 2){
+                rcct.setElemText("128780_2134_1");
+                rcct.setElemType("text");
+                Date d = rrt.getGastDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                rcct.setElemValue(sdf.format(d));
+                rcct.setElemCnValue(sdf.format(d));
+                mysqlRim.insertCrfContent(rcct);
+            }
+
             if(revisitResult == 2){
                 List<RegisterCard> rcs = oracleRvm.getRegisterCardFinal(rrt.getPatientCode(), rrt.getRevisitCode(),
                          "R02");
@@ -526,7 +588,7 @@ public class TestServiceImpl implements TestService {
                     }
                 });
             }
-            if(revisitId == 4){
+            if(revisitResult == 4){
                 handleLost(rrt, rcct, new InsertData() {
                     @Override
                     public void insertData(RevisitCrfContentTemp rcct) {
@@ -534,7 +596,7 @@ public class TestServiceImpl implements TestService {
                     }
                 });
             }
-            if(revisitId == 5){
+            if(revisitResult == 5){
                 List<RegisterCard> rcs = oracleRvm.getRegisterCardFinal(rrt.getPatientCode(), rrt.getRevisitCode(), "R02");
                 handleDiseaseCard(rrt, rcct, true, rcs, new InsertData() {
                     @Override

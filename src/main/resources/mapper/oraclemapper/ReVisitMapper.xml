@@ -64,7 +64,6 @@
         FROM
             EPI_REVISIT_RESULT_TEMP a1
             LEFT JOIN SYSTEM_USER b1 ON A1.USER_ID = B1.USER_ID
-
     </select>
 
     <select id="getResult" resultMap="common.revisitResultTemp">
@@ -92,7 +91,7 @@
 
     <select id="getRegisterCardFinal" resultMap="common.registerCard">
         SELECT ELEMENT_ID, ELEMENT_NAME, CARD_VALUE, REGISTER_DATE, "TYPE", "SIGN", PATIENT_NAME
-        FROM REGISTER_CARD
+        FROM REGISTER_CARD_FINAL
         WHERE PATIENT_ID = #{patientCode} AND REVISIT_ID = #{revisitCode} AND CARD_ID = #{cardId}
     </select>
 </mapper>

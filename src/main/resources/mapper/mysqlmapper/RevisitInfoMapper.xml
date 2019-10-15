@@ -188,7 +188,7 @@
     </insert>
 
     <insert id="insertCrfContent" parameterType="com.example.demo.model.RevisitCrfContentTemp">
-        INSERT INTO `ermis_epi_crf_content_temp` (`TEMPLATE_ID`, `PATIENT_ID`, `VILLAGEID`, `REVISIT_ID`,
+        INSERT INTO `ermis_epi_crf_content` (`TEMPLATE_ID`, `PATIENT_ID`, `VILLAGEID`, `REVISIT_ID`,
                                                    `ELEM_TEXT`, `ELEM_TYPE`, `ELEM_VALUE`, `ELEM_CN_VALUE`,
                                                   `DATA_SOURCE`)
         VALUES
